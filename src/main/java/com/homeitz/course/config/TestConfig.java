@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Profile;
 import com.homeitz.course.entities.Category;
 import com.homeitz.course.entities.Order;
 import com.homeitz.course.entities.OrderItem;
+import com.homeitz.course.entities.Payment;
 import com.homeitz.course.entities.Product;
 import com.homeitz.course.entities.User;
 import com.homeitz.course.entities.enums.OrderStatus;
@@ -82,8 +83,8 @@ public class TestConfig implements CommandLineRunner {
 		
 		orderItemRepository.saveAll(Arrays.asList(oi1, oi2, oi3, oi4));
 		
+		Payment pay1 = new Payment(null, Instant.parse("2019-06-20T21:53:07Z"), o1);
+		o1.setPayment(pay1); //associa o pedido o1 com o pagamento pay1
+		orderRepository.save(o1);
 	}
-	
-	
-
 }

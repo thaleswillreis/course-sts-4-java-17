@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,31 +18,36 @@ import com.homeitz.course.entities.User;
 import com.homeitz.course.services.UserService;
 
 @RestController
-@RequestMapping(value = "/users") //controlador Rest com caminho "/users"
+@RequestMapping(value = "/users") // controlador Rest com caminho "/users"
 public class UserResource {
-	
+
 	@Autowired
 	private UserService service;
-	
+
 	@GetMapping
-	public ResponseEntity<List<User>> findAll() {	//retorna todos os usuarios pelo metodo get	
+	public ResponseEntity<List<User>> findAll() { // retorna todos os usuarios pelo metodo get
 		List<User> list = service.findAll();
 		return ResponseEntity.ok().body(list);
 	}
-	
-	@GetMapping(value = "/{id}") //retorna um usuario especifico pelo metodo get ex: /users/1	
+
+	@GetMapping(value = "/{id}") // retorna um usuario especifico pelo metodo get ex: /users/1
 	public ResponseEntity<User> findById(@PathVariable Long id) {
 		User obj = service.findById(id);
 		return ResponseEntity.ok().body(obj);
 	}
-	
+
 	@PostMapping
-	public ResponseEntity<User> insert(@RequestBody User obj) { //recebe obj como JSON e decodifica para inserir no BD
+	public ResponseEntity<User> insert(@RequestBody User obj) { // recebe obj como JSON e decodifica para inserir no BD
 		obj = service.insert(obj);
-		//var do tipo URI que recebe o id do obj e converte para o seu tipo URI
+		// var do tipo URI que recebe o id do obj e converte para o seu tipo URI
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
-		return ResponseEntity.created(uri).body(obj); //retorna o obj convertido no tipo URI 
-		
+		return ResponseEntity.created(uri).body(obj); // retorna o obj convertido no tipo URI
+
 	}
 
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
+		service.delete(id);
+		return ResponseEntity.noContent().build();
+	}
 }
